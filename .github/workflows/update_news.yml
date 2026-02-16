@@ -1,0 +1,39 @@
+name: Update Breaking News
+
+on:
+  push:
+    branches: [ main ]      # Runs when you push code
+  schedule:
+    - cron: '0 */6 * * *'   # Runs automatically every 6 hours
+  workflow_dispatch:        # Allows manual trigger button
+
+permissions:
+  contents: write
+
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Google GenAI Library
+        run: pip install google-genai
+
+      - name: Run News Updater Script
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python update_news.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "NewsBot"
+          git config --global user.email "bot@example.com"
+          git add src/utils/incidents.json
+          # Only commit if there are changes
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update breaking news [skip ci]" && git push)

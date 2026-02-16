@@ -1,0 +1,5 @@
+{
+  "name": "BNP Crime Monitor Clone",
+  "description": "A React clone of the BNP Crime Monitor dashboard tracking incidents across Bangladesh with real-time updates and geographic visualization.",
+  "requestFramePermissions": []
+}
